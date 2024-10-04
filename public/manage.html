@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <link href="style/manage.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <h1>LINESONG MANAGER</h1><br>
+    <button id="mainpageBtn">MAIN</button>
+    
+    <div id="quantityContainter">
+        대기인원: <span id="numberOfStudents"> </span> <br>
+        대기수량: <span id="remainingQuantity"></span>
+    </div>
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대기자 명단
+    <table id="waitingUserTable">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Spot</th>
+                <th>Time</th>
+                <th>ID</th>
+                <th>Major</th>
+                <th>Name</th>
+                <th>Receipt</th>
+                <th>Receipt Button</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+    <br><br>
+    <h2></h2>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;수령자 명단
+    <table id="ReceiptedUserTable">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Spot</th>
+                <th>Time</th>
+                <th>ID</th>
+                <th>Major</th>
+                <th>Name</th>
+                <th>Receipt</th>
+                <th>Receipted Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+    <h6>수량 재대기 버튼은 아래서부터 순서대로 눌러주시길 바랍니다.</h6>
+    <script src="js/manage.js"></script>
+</body>
+</html>

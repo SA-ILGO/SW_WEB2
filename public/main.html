@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>LINESONG Main</title>
+        <link href="style/main.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <br><div id="title">SOOKMYUNG LINESONG</div><br>
+        <video id="logoContainer" autoplay muted>
+            <source src="style/Logo.mp4" type="video/mp4">
+        </video>
+        <div class="horizonal">
+            <div class="container">   
+                <div class="vertical">
+                    <h1>WAITER PAGE</h1>
+                    <button id="linesongEnter">ENTER <br> LineSong</button>
+                </div>
+            </div>
+            <div class="container">            
+                <div class="vertical">
+                    <h1>MANAGER PAGE</h1>
+                    <div class="horizonal">
+                        <div class="vertical">
+                            <input type="text" class="input-container" id="quantityNum" placeholder="  Input the number of people">
+                            <input type="password" class="input-container" id="password" placeholder="  Input Password">
+                        </div>
+                        <button id="managerEnter">ENTER</button>
+                    </div>
+                    <h3>&nbsp;&nbsp;관리자가 승인해야 대기자 페이지를 사용할 수 있습니다.</h3>
+                </div>     
+            </div>
+            </div>
+            </div>
+        </div>  
+    </body>
+    <script>
+        const passwd = 1234;
+        async function setQuantity(num){
+            console.log("setQuantity: " + num);
+            const response = await fetch(`/users/setQuantity/${num}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.ok) {
+                console.log("Receipt updated successfully");
+            } else {
+                console.error("Failed to update receipt");
+            }
+        }
+        // 로고 사라지기
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('logoContainer').style.opacity = '0'; 
+            }, 1500); 
+        };
+
+        document.getElementById('linesongEnter').onclick = function() {
+            window.location.href = '/linesong'; 
+        };
+
+        document.getElementById('managerEnter').onclick = function() {
+            let passwordValue = document.getElementById("password").value
+            const n = parseInt(document.getElementById("quantityNum").value);
+
+            if(passwordValue == passwd && n > 0){
+                setQuantity(n);
+                window.location.href = '/manage';
+            }
+            else if(isNaN(n) || n < 0) {
+                console.log("Wrong Password");
+                alert("0 이상의 정수를 입력하세요.");
+                document.getElementById("quantityNum").value = "";
+                document.getElementById("quantityNum").placeholder = "WRONG NUMBER";
+            }
+            else if(passwordValue != passwd) {
+                console.log("Wrong Password");
+                alert("비밀번호가 올바르지 않습니다.");
+                document.getElementById("password").value = "";
+                document.getElementById("password").placeholder = "WRONG PASSWORD";
+            }
+        };
+    </script>
+</html>
+
+

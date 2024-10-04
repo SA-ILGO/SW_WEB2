@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student and Line Data</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Student Data</h1>
+<table id="studentTable">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>NUID</th>
+        <th>Major</th>
+        <th>Membership</th>
+    </tr>
+</table>
+
+<h1>Line Data</h1>
+<table id="lineTable">
+    <tr>
+        <th>NUID</th>
+        <th>Time</th>
+        <th>Waiting Number</th>
+        <th>Waiting Spot</th>
+        <th>Receipt Confirmation</th>
+    </tr>
+</table>
+
+<script>
+    function populateTables(students, lines) {
+        const studentTable = document.getElementById('studentTable');
+        const lineTable = document.getElementById('lineTable');
+
+        students.forEach(student => {
+            const row = studentTable.insertRow();
+            row.insertCell(0).textContent = student.ID;
+            row.insertCell(1).textContent = student.Name;
+            row.insertCell(2).textContent = student.NUID;
+            row.insertCell(3).textContent = student.Major;
+            row.insertCell(4).textContent = student.Membership;
+        });
+
+        lines.forEach(line => {
+            const row = lineTable.insertRow();
+            row.insertCell(0).textContent = line.NUID;
+            row.insertCell(1).textContent = line.Time;
+            row.insertCell(2).textContent = line.WaitingNumber;
+            row.insertCell(3).textContent = line.WaitingSpot;
+            row.insertCell(4).textContent = line.ReceiptConfirmation;
+        });
+    }
+
+    fetch('/api/data')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received data:', data); // 데이터 로깅
+            populateTables(data.students, data.lines);
+        })
+        .catch(error => console.error('Error:', error));
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+@font-face {
+    font-family: 'GongGothicMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RixInooAriDuriR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2207-01@1.0/RixInooAriDuriR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    background-color: rgb(113, 140, 167);
+    font-family: 'GongGothicMedium'; 
+}
+
+h1 {
+    color: rgb(27, 34, 69);
+    font-size: 20px;
+    text-align: center;
+    font-weight: 1000;
+}
+
+h2 {
+    background-color: #ffffff;
+    height: 2px;
+}
+
+table {
+    margin: auto;
+    width: 98%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 2px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+td {
+    background-color: #ffffff;
+}
+
+.horizonal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.receiptBtn {
+    margin: 3px;
+    font-family: 'GongGothicMedium'; 
+    padding: 10px;
+    width: 100px;
+    height: 40px;
+}
+
+#quantityContainter {
+    border: #575757;
+    border-width: 30px;
+    border-radius: 20px;
+    font-family: 'GongGothicMedium'; 
+    font-size: 27px;    
+    text-align: center;
+    margin: auto;
+    padding: 15px;
+    height: 60px;
+    width: 220px;
+    background-color: #ffffff   ;
+}
+
+#mainpageBtn {
+    font-family: 'GongGothicMedium'; 
+    position: absolute; 
+    right: 1%;
+    text-align: center;
+    height: 50px;
+    width: 70px;
+    font-size: 20px;
+    border-radius: 20px;
+    border-color: white;
+    background-color: #ff9900;
+}
+
+#waitingUserTable th {
+    background-color: #f7f2bd;
+}
+
+#ReceiptedUserTable th {
+    background-color: #c57979;
+}
