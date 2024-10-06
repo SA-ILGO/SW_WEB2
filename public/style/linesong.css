@@ -12,7 +12,7 @@
 }
 
 body {
-background-color: rgb(30, 73, 114);
+background-color: rgb(58, 104, 148);
 font-family: 'GongGothicMedium'; 
 }
 
@@ -41,7 +41,7 @@ h3 {
 }
 
 .container {
-    margin: 20px;
+    margin: 70px;
 	width: 280px;
 	height: 500px;
 	background: #c9d5e0;
@@ -102,7 +102,7 @@ input::placeholder {
         inset -10px -10px 30px rgba(255, 255, 255, 0.5); /* 밝은 내부 그림자 */
 }
 
-#timeContainer {
+#remainingQuantityContatiner {
     margin: 20px;
 	width: 250px;
 	height: 90px;

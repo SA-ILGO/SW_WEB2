@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINESONG Waiting</title>
+    <link href="style/linesong.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            text-align: center;
+            padding: 0;
+            border: 0;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+  <br><div id="title">LINESONG WAITER</div><br>
+    <div class="horizonal">
+      <div class="container">
+          <h1>WAITING TIME</h1>
+          <div>
+              <input type="text" class="input-container" id="ID" placeholder="  Input ID">
+              <button id="IDEnter">▶</button>
+          </div>
+          <div id="remainingQuantityContatiner">000</div>
+          <h3>&nbsp;&nbsp;관리자가 승인해야 대기자 페이지를 사용할 수 있습니다.</h3>
+      </div>
+      <div>
+        <canvas id="unity-canvas" width="900" height="600" tabindex="-1" style="width: 800px; height: 500px; background: #231F20"></canvas>
+    </div>
+    </div>
+    <script src="Build/public.loader.js"></script>
+    <script>
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            // Mobile device style: fill the whole browser client area with the game canvas:
+            var meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+            document.getElementsByTagName('head')[0].appendChild(meta);
+
+            var canvas = document.querySelector("#unity-canvas");
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            canvas.style.position = "fixed";
+
+            document.body.style.textAlign = "left";
+        }
+
+        createUnityInstance(document.querySelector("#unity-canvas"), {
+            dataUrl: "Build/public.data",
+            frameworkUrl: "Build/public.framework.js",
+            codeUrl: "Build/public.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "DefaultCompany",
+            productName: "MEIT_CONTEST",
+            productVersion: "0.1",
+        });
+    </script>
+</body>
+</html>

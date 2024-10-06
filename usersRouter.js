@@ -146,5 +146,26 @@ router.post('/updateSpot', async (req, res) => {
     }
 });
 
+router.post('/finishedWaitingTime/:time/:NUID', async (req, res) => {
+    const res_signup = {
+        status_code: 500
+    };
+
+    try {
+        const time = req.params.time;
+        const NUID = req.params.NUID;
+        const rows = await userDBC.FinishedWaitingTime(time, NUID);
+ 
+        if (rows.affectedRows > 0) {
+            res_signup.status_code = 200;  
+        } else {
+            res_signup.status_code = 201;  
+        }
+    } catch (err) {
+        console.log(err.message);
+    } finally {
+        res.json(res_signup);
+    }
+});
 
 module.exports = router; 

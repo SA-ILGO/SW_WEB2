@@ -53,10 +53,18 @@ const UpdateSpot = async () => {
     return rows;
 };
 
+const FinishedWaitingTime = async (time, NUID) => {
+    const promisePool = pool.promise(); 
+    const [rows] = await promisePool.query('UPDATE line SET WaitingFinishedTime = ? WHERE NUID = ?', [time, NUID]);
+    console.log(rows);
+    return rows;
+};
+
+
   
   
   module.exports = 
   {
-    ReceiptReady, Received, NotReceived, MinusQuantity, PlusQuantity, SetQuantity, UpdateSpot
+    ReceiptReady, Received, NotReceived, MinusQuantity, PlusQuantity, SetQuantity, UpdateSpot, FinishedWaitingTime
   };
    

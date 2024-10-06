@@ -23,7 +23,8 @@
                     <h1>MANAGER PAGE</h1>
                     <div class="horizonal">
                         <div class="vertical">
-                            <input type="text" class="input-container" id="quantityNum" placeholder="  Input the number of people">
+                            <input type="text" class="input-container" id="executiveNum" placeholder="  Input the number of executive">
+                            <input type="text" class="input-container" id="quantityNum" placeholder="  Input the number of things">
                             <input type="password" class="input-container" id="password" placeholder="  Input Password">
                         </div>
                         <button id="managerEnter">ENTER</button>
@@ -72,13 +73,16 @@
                 window.location.href = '/manage';
             }
             else if(isNaN(n) || n < 0) {
-                console.log("Wrong Password");
+                alert("0 이상의 정수를 입력하세요.");
+                document.getElementById("executiveNum").value = "";
+                document.getElementById("executiveNum").placeholder = "WRONG NUMBER";
+            }
+            else if(isNaN(n) || n < 0) {
                 alert("0 이상의 정수를 입력하세요.");
                 document.getElementById("quantityNum").value = "";
                 document.getElementById("quantityNum").placeholder = "WRONG NUMBER";
             }
             else if(passwordValue != passwd) {
-                console.log("Wrong Password");
                 alert("비밀번호가 올바르지 않습니다.");
                 document.getElementById("password").value = "";
                 document.getElementById("password").placeholder = "WRONG PASSWORD";

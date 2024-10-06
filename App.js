@@ -12,6 +12,7 @@ app.use(cors());  // 모든 요청에 대해 CORS 허용
 
 
 app.use(express.static('public'));
+app.use(express.static('Build'));
 
 app.use(`/users`, usersRouter);
 
@@ -24,7 +25,7 @@ app.get('/main', (req, res) => {
 });
 
 app.get('/linesong', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'linesong.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/api/data', async (req, res) => {
