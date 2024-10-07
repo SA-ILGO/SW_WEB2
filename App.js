@@ -52,5 +52,9 @@ app.listen(port, '0.0.0.0', () => {
     console.log(`Server running at http://localhost:${port}/main`);
 });
 
+app.get('/MMCK', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'MMCK.html'));
+});
+
 // node app.js (터미널에서 이 코드로 실행)
 //http://127.0.0.1:3000

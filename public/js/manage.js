@@ -206,18 +206,24 @@ async function PlusQuantity() {
 }
 
 // 수량 데이터 가져오기
-async function FetchQuantity() { 
+async function FetchQuantity() {
     try {
-        const response = await fetch('/api/data'); // 데이터 가져오기
-        const data = await response.json(); // JSON으로 파싱
-        
-        if (data.quantity) {
-            document.getElementById("remainingQuantity").textContent = data.quantity[0].remainingQuantity;  
+        const response = await fetch('/api/data');
+        const data = await response.json();
+
+        if (data.quantity && data.quantity.length > 0) {
+            const remainingQuantity = data.quantity[0].remainingQuantity;
+            document.getElementById("remainingQuantity").textContent = remainingQuantity;
+
+            // 수량이 0이 되면 팝업창 표시
+            if (parseInt(remainingQuantity) === 0) {
+                showPopup();
+            }
         } else {
             console.log('No quantity data available');
         }
     } catch (error) {
-        console.error('Error fetching quantity data:', error); // 에러 처리
+        console.error('Error fetching quantity data:', error);
     }
 }
 
@@ -252,6 +258,29 @@ async function FinishedWaitingTime(time, NUID) {
     }
 }
 
+// 팝업창 표시 함수
+function showPopup() {
+    const popup = document.getElementById('analysisPopup');
+    if (popup) {
+        popup.style.display = 'block';
+    } else {
+        console.error('Popup element not found');
+    }
+}
+
+// 팝업창 닫기 함수
+function closePopup() {
+    const popup = document.getElementById('analysisPopup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+// 분석 보기 함수
+function viewAnalysis() {
+    window.location.href = '/MMCK';
+}
+
 document.getElementById('mainpageBtn').onclick = function() {
     window.location.href = '/main'; 
 };
@@ -281,5 +310,20 @@ window.onload = async () => {
     };
 
     // 10초마다 fetchData 함수 호출
-    setInterval(fetchData, 5000); // 과부화 걱정 돼서 우선 10초로 진행 
+    setInterval(fetchData, 5000); // 과부화 우려로 길게 잡음
+
+    // 전역 스코프에 함수 할당
+    window.closePopup = closePopup;
+    window.viewAnalysis = viewAnalysis;
+
+    // 초기 데이터 로드 및 주기적 업데이트
+    await fetchData();
+    setInterval(fetchData, 5000); // 과부하 우려
 };
+
+// 데이터 fetch 함수
+async function fetchData() {
+    await FetchUsers();
+    await FetchQuantity();
+    await UpdateSpot();
+}

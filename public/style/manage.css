@@ -100,3 +100,57 @@ td {
 #ReceiptedUserTable th {
     background-color: #c57979;
 }
+
+/* 팝업창 스타일 추가 */
+.popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border: 2px solid #1b2245;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    font-family: 'GongGothicMedium';
+    text-align: center;
+}
+
+.popup h2 {
+    color: #1b2245;
+    font-size: 18px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    height: auto;
+}
+
+.popup p {
+    color: #575757;
+    margin-bottom: 20px;
+}
+
+.popup button {
+    font-family: 'GongGothicMedium';
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup button:first-of-type {
+    background-color: #ff9900;
+    color: white;
+}
+
+.popup button:last-of-type {
+    background-color: #f7f2bd;
+    color: #1b2245;
+}
+
+.popup button:hover {
+    opacity: 0.8;
+}

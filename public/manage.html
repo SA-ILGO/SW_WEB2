@@ -14,6 +14,13 @@
         대기인원: <span id="numberOfStudents"> </span> <br>
         대기수량: <span id="remainingQuantity"></span>
     </div>
+    <!-- 팝업창 추가 -->
+    <div id="analysisPopup" class="popup" style="display: none;">
+        <h2>수량이 모두 소진되었습니다</h2>
+        <p>분석 결과를 확인하시겠습니까?</p>
+        <button onclick="viewAnalysis()">분석 보기</button>
+        <button onclick="closePopup()">닫기</button>
+    </div>
     <br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대기자 명단
     <table id="waitingUserTable">
@@ -54,6 +61,6 @@
         </tbody>
     </table>
     <h6>수량 재대기 버튼은 아래서부터 순서대로 눌러주시길 바랍니다.</h6>
-    <script src="js/manage.js"></script>
+    <script src="./js/manage.js"></script>
 </body>
 </html>
