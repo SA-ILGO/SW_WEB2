@@ -54,6 +54,22 @@
             }
         }
 
+        async function setTotalQuantity(num){
+            console.log("setTotalQuantity: " + num);
+            const response = await fetch(`/users/setTotalQuantity/${num}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.ok) {
+                console.log("Receipt updated successfully");
+            } else {
+                console.error("Failed to update receipt");
+            }
+        }
+
         async function setServerNum(num){
             console.log("setServerNum: " + num);
             const response = await fetch(`/users/setServerNum/${num}`, {
@@ -89,6 +105,7 @@
 
             if(passwordValue == passwd && n > 0){
                 setQuantity(n);
+                setTotalQuantity(n);
                 setServerNum(num);
                 window.location.href = '/manage';
             }

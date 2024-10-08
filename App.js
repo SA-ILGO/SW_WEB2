@@ -34,7 +34,7 @@ app.get('/api/data', async (req, res) => {
     try {
         const [quantity] = await connection.execute('SELECT * FROM quantity');
         const [students] = await connection.execute('SELECT * FROM student');
-        const [lines] = await connection.execute('SELECT * FROM line');
+        const [lines] = await connection.execute('SELECT * FROM line ORDER BY Time ASC');
         res.json({ quantity, students, lines });
     } catch (error) {
         console.error('Error fetching data:', error);
