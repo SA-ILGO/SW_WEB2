@@ -12,7 +12,7 @@
 }
 body {
     background-color: rgb(113, 140, 167);
-    font-family: 'GongGothicMedium'; 
+    font-family: 'GongGothicMedium';
 }
 
 h1 {
@@ -60,7 +60,7 @@ td {
 
 .receiptBtn {
     margin: 3px;
-    font-family: 'GongGothicMedium'; 
+    font-family: 'GongGothicMedium';
     padding: 10px;
     width: 100px;
     height: 40px;
@@ -70,7 +70,7 @@ td {
     border: #575757;
     border-width: 30px;
     border-radius: 20px;
-    font-family: 'GongGothicMedium'; 
+    font-family: 'GongGothicMedium';
     font-size: 27px;    
     text-align: center;
     margin: auto;
@@ -81,7 +81,7 @@ td {
 }
 
 #mainpageBtn {
-    font-family: 'GongGothicMedium'; 
+    font-family: 'GongGothicMedium';
     position: absolute; 
     right: 1%;
     text-align: center;

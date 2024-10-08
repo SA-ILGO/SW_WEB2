@@ -56,5 +56,7 @@ app.get('/MMCK', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'MMCK.html'));
 });
 
+app.use('/src', express.static(path.join(__dirname, 'src')));
+
 // node app.js (터미널에서 이 코드로 실행)
 //http://127.0.0.1:3000

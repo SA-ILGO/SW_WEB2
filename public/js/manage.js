@@ -302,7 +302,7 @@ window.onload = async () => {
         console.error('Error fetching user data:', error);
     }
 
-    
+
     const fetchData = async () => {
         await FetchUsers();   // users 데이터 가져오기
         await FetchQuantity(); // quantity 데이터 가져오기
@@ -319,6 +319,8 @@ window.onload = async () => {
     // 초기 데이터 로드 및 주기적 업데이트
     await fetchData();
     setInterval(fetchData, 5000); // 과부하 우려
+
+
 };
 
 // 데이터 fetch 함수

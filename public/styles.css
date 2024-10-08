@@ -1,0 +1,30 @@
+/* public/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #2c3e50;
+}
+
+.container {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#charts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+#charts > div {
+    width: 48%;
+}
