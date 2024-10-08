@@ -47,6 +47,13 @@ const SetQuantity = async (num) => {
   return rows;
 };
 
+const SetTotalQuantity = async (num) => {
+    const promisePool = pool.promise(); 
+    const [rows] = await promisePool.query('UPDATE quantity SET totalQuantity = ?', [num]);
+    console.log(rows);
+    return rows;
+  };
+
 const SetServerNum = async (num) => {
     const promisePool = pool.promise();
     const [rows] = await promisePool.query('UPDATE quantity SET serverNum = ?', [num]);
@@ -77,50 +84,6 @@ const FinishedWaitingTime = async (time, NUID) => {
 //
 
 // 새로운 데이터를 추가할 때 '초기예상대기시간'을 설정하기 위한 메서드
-
-const addToLine = async (NUID, c) => {
-    const promisePool = pool.promise();
-
-    try {
-        // 트랜잭션 시작
-        await promisePool.query('START TRANSACTION');
-
-        // 대기 중인 고객 수 계산 (ReceiptConfirmation이 0인 행의 수)
-        const [waitingCount] = await promisePool.query('SELECT COUNT(*) as count FROM line WHERE ReceiptConfirmation = 0');
-        const n = waitingCount[0].count;
-
-        // MMCK.html 파일 읽기
-        const mmckPath = path.join(__dirname, 'public', 'MMCK.html');
-        const mmckContent = fs.readFileSync(mmckPath, 'utf8');
-
-        // MMCK.html에서 mu 값 추출
-        const mu = extractMuValue(mmckContent);
-
-        // MMCK 모델을 사용하여 WaitingInitialTime 계산
-        const waitingInitialTime = calculateMMCKWaitTime(n, c, mu);
-
-        // 현재 시간 가져오기
-        const [currentTime] = await promisePool.query('SELECT CURRENT_TIMESTAMP() as now');
-        const now = currentTime[0].now;
-
-        // 새 행 삽입
-        const [insertResult] = await promisePool.query(
-            'INSERT INTO line (NUID, Time, WaitingNumber, WaitingInitialTime) VALUES (?, ?, ?, ?)',
-            [NUID, now, n + 1, waitingInitialTime]
-        );
-
-        // 트랜잭션 커밋
-        await promisePool.query('COMMIT');
-
-        console.log(insertResult);
-        return insertResult;
-    } catch (error) {
-        // 오류 발생 시 롤백
-        await promisePool.query('ROLLBACK');
-        console.error('Error in addToLine:', error);
-        throw error;
-    }
-};
 
 // MMCK.html에서 mu 값을 추출하는 헬퍼 함수
 function extractMuValue(htmlContent) {
@@ -159,6 +122,6 @@ function calculateMMCKWaitTime(n, c, mu) {
   
   module.exports = 
   {
-    ReceiptReady, Received, NotReceived, MinusQuantity, PlusQuantity, SetQuantity, UpdateSpot, FinishedWaitingTime, SetServerNum
+    ReceiptReady, Received, NotReceived, MinusQuantity, PlusQuantity, SetQuantity, UpdateSpot, FinishedWaitingTime, SetServerNum, SetTotalQuantity
   };
    

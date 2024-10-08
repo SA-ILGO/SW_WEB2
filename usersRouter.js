@@ -126,6 +126,27 @@ router.post('/setQuantity/:num', async (req, res) => {
     }
 });
 
+router.post('/setTotalQuantity/:num', async (req, res) => {
+    const res_signup = {
+        status_code: 500
+    };
+
+    try {
+        const num = req.params.num;
+        const rows = await userDBC.SetTotalQuantity(num);
+ 
+        if (rows.affectedRows > 0) {
+            res_signup.status_code = 200;  
+        } else {
+            res_signup.status_code = 201;  
+        }
+    } catch (err) {
+        console.log(err.message);
+    } finally {
+        res.json(res_signup);
+    }
+});
+
 router.post('/setServerNum/:num', async (req, res) => {
     const res_signup = {
         status_code: 500

@@ -60,9 +60,9 @@ async function FetchUsers() {
             waitingTable.innerHTML = ''; 
             receiptedTable.innerHTML = ''; 
 
+            let numberOfStudents = 0;
             lines.forEach(line => {
                 const student = students.find(s => s.NUID === line.NUID);
-                
                 const row = document.createElement('tr');
                 if(line.ReceiptConfirmation == 0){
                     row.innerHTML = `
@@ -83,6 +83,7 @@ async function FetchUsers() {
                     </td>
                 `;
                     waitingTable.appendChild(row);
+                    numberOfStudents++;
                 } 
                 else {
                     row.innerHTML = `
@@ -104,6 +105,7 @@ async function FetchUsers() {
                 }
                 
             });
+            document.getElementById("numberOfStudents").textContent = numberOfStudents;
         } else {
             console.log('No students found.');
         }
@@ -290,19 +292,6 @@ window.onload = async () => {
     FetchUsers();
     FetchQuantity();
 
-    try {
-        const response = await fetch('/api/data');
-        const data = await response.json();
-
-        const lines = data.lines;
-
-        numberOfStudents = lines.length;
-        document.getElementById("numberOfStudents").textContent = numberOfStudents;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-
-
     const fetchData = async () => {
         await FetchUsers();   // users 데이터 가져오기
         await FetchQuantity(); // quantity 데이터 가져오기
@@ -322,10 +311,3 @@ window.onload = async () => {
 
 
 };
-
-// 데이터 fetch 함수
-async function fetchData() {
-    await FetchUsers();
-    await FetchQuantity();
-    await UpdateSpot();
-}
