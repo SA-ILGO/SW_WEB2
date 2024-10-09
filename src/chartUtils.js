@@ -26,7 +26,12 @@ export function createTimeSeriesChart(elementId, title, data) {
         yaxis: {
             title: {
                 text: 'Minutes'
-            }
+            },
+            labels: {
+                formatter: function (value) {
+                    return value.toFixed(2); // 소수점 셋째 자리까지 출력
+                }
+            }   
         },
         title: {
             text: title,
@@ -38,7 +43,7 @@ export function createTimeSeriesChart(elementId, title, data) {
             }
         }
     };
-}
+}   
 
 export function createTimeSeriesAnalysisChart(elementId, title, data) {
     return {
@@ -168,12 +173,23 @@ export function createDistributionChart(elementId, title, data) {
         xaxis: {
             title: {
                 text: 'Waiting Time Range (minutes)'
-            }
+            },
+            labels: {
+                formatter: function (value) {
+                    return value.toFixed(2); // 소수점 셋째 자리까지 출력
+                }
+            } 
         },
         yaxis: {
             title: {
                 text: 'Waiting Time (minutes)'
+            },
+            labels: {
+                formatter: function (value) {
+                    return value.toFixed(3); // 소수점 셋째 자리까지 출력
+                }
             }
+            
         }
     };
 }

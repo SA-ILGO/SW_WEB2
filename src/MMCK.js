@@ -165,11 +165,20 @@ function createServiceOptimizationChart(data) {
         },
         series: [{
             name: 'Current',
-            data: [data.currentAverageWaitTime, data.currentMaxWaitTime, data.currentServers]
+            data: [
+                parseFloat(data.currentAverageWaitTime.toFixed(2)),  // 소수점 둘째 자리까지 반올림
+                parseFloat(data.currentMaxWaitTime.toFixed(2)),      // 소수점 둘째 자리까지 반올림
+                parseFloat(data.currentServers.toFixed(2))           // 소수점 둘째 자리까지 반올림
+            ]
         }, {
             name: 'Optimized',
-            data: [data.estimatedNewAverageWaitTime, data.currentMaxWaitTime, data.recommendedServers]
+            data: [
+                parseFloat(data.estimatedNewAverageWaitTime.toFixed(2)),  // 소수점 둘째 자리까지 반올림
+                parseFloat(data.currentMaxWaitTime.toFixed(2)),           // 소수점 둘째 자리까지 반올림
+                parseFloat(data.recommendedServers.toFixed(2))            // 소수점 둘째 자리까지 반올림
+            ]
         }],
+        
         xaxis: {
             categories: ['Average Wait Time', 'Max Wait Time', 'Servers'],
             title: {

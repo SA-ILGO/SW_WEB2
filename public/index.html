@@ -5,9 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>LINESONG Waiting</title>
     <link href="style/linesong.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script type="module" src="/src/chartUtils.js"></script>
+    <script type="module" src="/src/dataAnalysis.js"></script>
+    <script type="module" src="/src/MMCK.js"></script>
   </head>
   <body>
-    <br><div id="title">LINESONG WAITER</div><br>
+    <h1 id="title">LINESONG MANAGER</h1>
     <div class="horizonal">
       <div class="container">
           <h1>WAITING TIME</h1>
@@ -35,6 +39,20 @@
         <canvas id="unity-canvas" width="900" height="600" tabindex="-1" style="width: 800px; height: 500px; background: #231F20"></canvas>
     </div>
     </div>
+    <div id="TimeResContainer">
+        <span class="chart-container">
+            <table style="height: 60%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <div id="waitingTimesChart" class="chart"></div>
+                    </td>
+                    <td style="width: 30%;">
+                    </td>
+                </tr>
+            </table>
+        </span>
+    </div>
+    <br><br><br>
 
     <script src="Build/public.loader.js"></script>
     <script>
