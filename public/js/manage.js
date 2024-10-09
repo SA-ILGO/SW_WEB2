@@ -57,14 +57,14 @@ async function FetchUsers() {
         if (lines && lines.length > 0) {
             const waitingTable= document.querySelector('#waitingUserTable tbody');
             const receiptedTable= document.querySelector('#ReceiptedUserTable tbody');
-            waitingTable.innerHTML = ''; 
-            receiptedTable.innerHTML = ''; 
+            waitingTable.innerHTML = '';
+            receiptedTable.innerHTML = '';
 
             let numberOfStudents = 0;
             lines.forEach(line => {
                 const student = students.find(s => s.NUID === line.NUID);
                 const row = document.createElement('tr');
-                if(line.ReceiptConfirmation == 0){
+                if(line.ReceiptConfirmation === 0){
                     row.innerHTML = `
                     <td>${line ? line.WaitingNumber : 'N/A'}</td>
                     <td>${line ? line.WaitingSpot : 'N/A'}</td>
@@ -84,7 +84,7 @@ async function FetchUsers() {
                 `;
                     waitingTable.appendChild(row);
                     numberOfStudents++;
-                } 
+                }
                 else {
                     row.innerHTML = `
                     <td>${line ? line.WaitingNumber : 'N/A'}</td>
@@ -103,7 +103,7 @@ async function FetchUsers() {
                 `;
                     receiptedTable.appendChild(row);
                 }
-                
+
             });
             document.getElementById("numberOfStudents").textContent = numberOfStudents;
         } else {

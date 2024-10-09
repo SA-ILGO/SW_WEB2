@@ -8,83 +8,120 @@
     <script type="module" src="/src/chartUtils.js"></script>
     <script type="module" src="/src/dataAnalysis.js"></script>
     <script type="module" src="/src/MMCK.js"></script>
-<!--    <style>-->
-<!--        .chart-container {-->
-<!--            display: flex;-->
-<!--            flex-wrap: wrap;-->
-<!--            justify-content: space-around;-->
-<!--        }-->
-<!--        .chart {-->
-<!--            width: 100%;-->
-<!--            max-width: 600px;-->
-<!--            margin-bottom: 20px;-->
-<!--        }-->
-<!--    </style>-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chart-wrapper {
+            width: 100%;
+            margin-bottom: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .chart {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .chart-description {
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .chart {
+                width: 48%;
+            }
+
+            .chart-description {
+                width: 48%;
+            }
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<div id="mmckResults">
-    <!-- MMCK 모델 결과가 여기에 표시됩니다 -->
-</div>
+<h1>분석 보고서</h1>
 
 <div class="chart-container">
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 70%;">
-                    <div id="waitingTimesChart" class="chart"></div>
-                </td>
-                <td style="width: 30%;">
-                    <h3>대기 시간 분포</h3>
-                    <p>이 그래프는 시간에 따른 고객의 대기 시간 변화를 보여줍니다.</p>
-                    <p>가로축: 시간 (시:분), 세로축: 대기 시간 (분)</p>
-                    <p>그래프 해석: 선이 위로 올라갈수록 해당 시간에 대기 시간이 길었음을 의미합니다. 피크 시간대와 대기 시간이 적은 시간대를 파악할 수 있습니다.</p>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 70%;">
-                    <div id="registrationTimesChart" class="chart"></div>
-                </td>
-                <td style="width: 30%;">
-                    <h3>등록 시간 분포 (08:00 - 16:00)</h3>
-                    <p>이 원형 차트는 08:00부터 16:00 사이의 10분 간격별 등록 건수를 보여줍니다.</p>
-                    <p>각 섹터: 10분 간격 (예: 9:00은 09:00-09:09를 의미), 섹터 크기: 해당 시간 간격의 등록 건수</p>
-                    <p>그래프 해석: 큰 섹터일수록 해당 10분 간격에 등록이 많이 이루어졌음을 의미합니다. 이를 통해 가장 바쁜 시간 간격을 파악할 수 있습니다.</p>                </td>
-            </tr>
+    <div class="chart-wrapper">
+        <div id="waitingTimesChart" class="chart"></div>
+        <div class="chart-description">
+            <h3>대기 시간 분포</h3>
+            <p>이 그래프는 특정 시간에 대기 등록을 한 송이❄️가<br>수령하기까지 대기한 시간에 대한 그래프입니다.</p>
+            <p><strong>가로축:</strong> 대기등록시간(시:분), 즉 RFID를 찍은 시간<br><strong>세로축:</strong> 실제 대기한 시간 (분)</p>
+            <p><strong>그래프 해석:</strong> 선이 위로 올라갈수록 해당 시간에 등록한 학생이 물품을 수령하기까지 오래 기다렸음을 의미합니다. <br>피크 시간대와 대기 시간이 적은 시간대를 파악할 수 있습니다.</p>
+        </div>
+    </div>
 
-            <tr>
-                <td style="width: 70%;">
-                    <div id="peakIntervalsChart" class="chart"></div>
-                </td>
-                <td style="width: 30%;">
-                    <h3>예측된 피크 시간 간격 (08:00 - 16:00)</h3>
-                    <p>이 막대 그래프는 08:00부터 16:00 사이의 10분 간격별 등록 건수와 피크 시간 간격을 보여줍니다.</p>
-                    <p>가로축: 시간 (10분 간격), 세로축: 등록 건수</p>
-                    <p>막대 색상: 빨간색 막대는 피크 시간 간격을 나타냅니다.</p>
-                    <p>그래프 해석: 높은 막대일수록 해당 10분 간격에 등록이 많이 이루어졌음을 의미합니다. 빨간색 막대는 평균보다 50% 이상 높은 등록 건수를 보인 피크 시간 간격입니다.</p>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 70%;">
-                    <div id="timeSeriesAnalysisChart" class="chart"></div>
-                </td>
-                <td style="width: 30%;">
-                    <h3>대기 시간 추세</h3>
-                    <p>이 그래프는 시간에 따른 대기 시간의 변화 추세를 보여줍니다.</p>
-                    <p>가로축: 시간, 세로축: 대기 시간 (분)</p>
-                    <p>그래프 해석: 선이 위로 올라갈수록 해당 시간에 대기 시간이 길었음을 의미합니다. 녹색 선은 평균 대기 시간을 나타냅니다. 이를 통해 대기 시간의 전반적인 추세와 평균에서 벗어난 이상치를 파악할 수 있습니다.</p>
-            </tr>
-            <tr>
-                <td style="width: 70%;">
-                    <div id="serviceOptimizationChart" class="chart"></div></div>
-                </td>
-                <td style="width: 30%;">
-                    <h3>서비스 MMCK 분석 요약</h3>
-                    <p>이 그래프는 .</p>
-                    <p>가로축: 시간, 세로축: 대기 시간 (분)</p>
-                    <p>그래프 해석: 선이 위로 올라갈수록 해당 시간에 대기 시간이 길었음을 의미합니다. 녹색 선은 평균 대기 시간을 나타냅니다. 이를 통해 대기 시간의 전반적인 추세와 평균에서 벗어난 이상치를 파악할 수 있습니다.</p>
-            </tr>
-        </table>
+    <div class="chart-wrapper">
+        <div id="registrationTimesChart" class="chart"></div>
+        <div class="chart-description">
+            <h3>등록 시간 분포 (08:00 - 16:00)</h3>
+            <p>이 원형 차트는 08:00부터 16:00 사이의 10분 간격별 등록 건수를 보여주는 차트입니다.</p>
+            <p><strong>각 섹터:</strong> 10분 간격 (예: 9:00은 09:00-09:09를 의미), <strong>섹터 크기:</strong> 해당 시간 간격의 등록 건수</p>
+            <p><strong>그래프 해석:</strong> 큰 섹터일수록 해당 10분 간격에 등록이 많이 이루어졌음을 의미합니다. 이를 통해 가장 바쁜 시간 간격을 파악할 수 있습니다.</p>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <div id="peakIntervalsChart" class="chart"></div>
+        <div class="chart-description">
+            <h3>예측된 피크 시간 간격 (08:00 - 16:00)</h3>
+            <p>이 막대 그래프는 08:00부터 16:00 사이의 10분 간격별 등록 건수와 피크 시간 간격을 보여줍니다.</p>
+            <p><strong>가로축:</strong> 시간 (10분 간격), <strong>세로축:</strong> 등록 건수</p>
+            <p><strong>막대 색상:</strong> 빨간색 막대는 피크 시간 간격을 나타냅니다.</p>
+            <p><strong>그래프 해석:</strong> 높은 막대일수록 해당 10분 간격에 등록이 많이 이루어졌음을 의미합니다. 빨간색 막대는 평균보다 50% 이상 높은 등록 건수를 보인 피크 시간 간격입니다.</p>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <div id="serviceOptimizationChart" class="chart"></div>
+        <div class="chart-description">
+            <h3>서비스 MMCK 분석 요약</h3>
+            <p>이 그래프는 현재 시스템 성능과 최적화 후 예상되는 성능을 비교합니다.</p>
+            <p><strong>가로축:</strong> 측정 지표 (평균 대기 시간, 최대 대기 시간, 서버 수), <strong>세로축:</strong> 해당 지표의 값</p>
+            <p><strong>그래프 해석:</strong> 파란색 막대는 현재 상태를, 초록색 막대는 최적화 후 예상되는 상태를 나타냅니다.
+                <br>이 통계를 통해, '나눠주는 학생회 인원수(Servers)'를 수정했을 때 시스템 통계가 어떻게 변화하는지 예측할 수 있고
+                <br>시스템 최적화를 위한 방안을 세울 수 있습니다.</p>
+        </div>
+    </div>
 </div>
-
-
 </body>
 </html>
