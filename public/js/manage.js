@@ -288,18 +288,12 @@ document.getElementById('mainpageBtn').onclick = function() {
 };
 
 window.onload = async () => {
-    UpdateSpot();
-    FetchUsers();
-    FetchQuantity();
-
     const fetchData = async () => {
+        console.log("fetchData");
         await FetchUsers();   // users 데이터 가져오기
         await FetchQuantity(); // quantity 데이터 가져오기
-        await UpdateSpot();
+        await UpdateSpot(); 
     };
-
-    // 10초마다 fetchData 함수 호출
-    setInterval(fetchData, 5000); // 과부화 우려로 길게 잡음
 
     // 전역 스코프에 함수 할당
     window.closePopup = closePopup;
@@ -307,7 +301,82 @@ window.onload = async () => {
 
     // 초기 데이터 로드 및 주기적 업데이트
     await fetchData();
+    await updateServerCompletionTime();
     setInterval(fetchData, 5000); // 과부하 우려
+    setInterval(updateServerCompletionTime, 5000); // 과부하 우려
 
 
 };
+
+const mu = 6; // 서비스 속도 (명/분)
+    
+    // 서비스 종료 시간 계산 함수
+function calculateServiceCompletionTime(n, c, mu) {
+    return Math.ceil(n / c) * (1 / mu);
+}
+
+// 차트 업데이트 함수
+let serviceCompletionTimeChart;
+function updateServerCompletionTime() {
+    console.log("updateServerCompletionTime");
+    const totalCustomers = parseInt(document.getElementById('numberOfStudents').textContent);
+    
+    const cValues = [1, 2, 3, 4, 5];
+    const completionTimes = cValues.map(c => calculateServiceCompletionTime(totalCustomers, c, mu)); // 분 단위로 변환
+
+    // 기존 차트가 있으면 제거
+    if (serviceCompletionTimeChart) {
+        serviceCompletionTimeChart.destroy();
+    }
+
+    const ctx = document.getElementById('serviceCompletionTimeChart').getContext('2d');
+    serviceCompletionTimeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: cValues,
+            datasets: [{
+                label: '서비스 종료 시간 (분)',
+                data: completionTimes,
+                borderColor: 'rgba(255, 0, 0, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '서비스 종료 시간 (분)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: '서버 수 (c)'
+                    }
+                }
+            },
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '운영진 수에 따른 서비스 종료 시간'
+                }
+            }
+        }
+    });
+    const serverCalRes = document.getElementById('serverCalRes').querySelector('tbody');
+    serverCalRes.innerHTML = ''; // 기존 결과 초기화
+
+    for (let i = 0; i < cValues.length; i++) {
+        const serverTime = document.createElement('tr');
+        serverTime.innerHTML = `
+            <td>${cValues[i]}</td>
+            <td>${completionTimes[i].toFixed(1)} 초</td>
+        `;
+        serverCalRes.appendChild(serverTime);
+    }
+}
+
+
