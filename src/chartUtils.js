@@ -8,10 +8,20 @@ export function createTimeSeriesChart(elementId, title, data) {
         },
         series: [{
             name: 'Waiting Time',
-            data: data.map(point => [point.x, point.y])
+            data: data.map(point => ({
+                x: new Date(point.x).getTime(),
+                y: point.y
+            }))
         }],
         xaxis: {
-            type: 'datetime'
+            type: 'datetime',
+            labels: {
+                format: 'HH:mm',
+                datetimeUTC: false
+            },
+            tickAmount: 6,
+            min: new Date(data[0].x).getTime(),
+            max: new Date(data[data.length - 1].x).getTime()
         },
         yaxis: {
             title: {
@@ -21,6 +31,58 @@ export function createTimeSeriesChart(elementId, title, data) {
         title: {
             text: title,
             align: 'center'
+        },
+        tooltip: {
+            x: {
+                format: 'HH:mm'
+            }
+        }
+    };
+}
+
+export function createTimeSeriesAnalysisChart(elementId, title, data) {
+    return {
+        chart: {
+            type: 'line',
+            height: 350
+        },
+        series: [{
+            name: 'Waiting Time',
+            data: data.map(point => [point.x, point.y])
+        }],
+        xaxis: {
+            type: 'datetime',
+            title: {
+                text: 'Time'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Waiting Time (minutes)'
+            }
+        },
+        title: {
+            text: title,
+            align: 'center'
+        },
+        tooltip: {
+            x: {
+                format: 'HH:mm'
+            }
+        },
+        annotations: {
+            yaxis: [{
+                y: data.reduce((sum, point) => sum + point.y, 0) / data.length,
+                borderColor: '#00E396',
+                label: {
+                    borderColor: '#00E396',
+                    style: {
+                        color: '#fff',
+                        background: '#00E396'
+                    },
+                    text: 'Average'
+                }
+            }]
         }
     };
 }
@@ -62,9 +124,9 @@ export function createBarChart(elementId, title, data) {
             data: data.map(item => item.count)
         }],
         xaxis: {
-            categories: data.map(item => item.hour.toString()),
+            categories: data.map(item => item.hour),
             title: {
-                text: 'Hour of Day'
+                text: 'Time Interval'
             }
         },
         yaxis: {

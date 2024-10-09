@@ -1,7 +1,7 @@
 import * as dataAnalysis from './dataAnalysis.js';
 import * as chartUtils from './chartUtils.js';
-import { createTimeSeriesChart, createPieChart, createBarChart, createDistributionChart } from './chartUtils.js';
-import { analyzeWaitingTimes, analyzeRegistrationTimes, predictPeakHours, optimizeServiceTime } from './dataAnalysis.js';
+import { createTimeSeriesChart, createPieChart, createBarChart, createDistributionChart, createTimeSeriesAnalysisChart } from './chartUtils.js';
+import { analyzeWaitingTimes, analyzeRegistrationTimes, predictPeakIntervals, optimizeServiceTime } from './dataAnalysis.js';
 
 async function fetchData() {
     try {
@@ -57,27 +57,42 @@ async function initMMCK() {
 
     // Analyze waiting times
     const waitingTimesAnalysis = analyzeWaitingTimes(lines);
-    if (waitingTimesAnalysis.waitingTimeDistribution.length > 0) {
-        const waitingTimesChartOptions = createTimeSeriesChart('waitingTimesChart', 'Waiting Times Distribution',
-            waitingTimesAnalysis.waitingTimeDistribution.map(d => ({ x: new Date(d.min), y: d.count })));
+    if (waitingTimesAnalysis.chartData.length > 0) {
+        const waitingTimesChartOptions = createTimeSeriesChart('waitingTimesChart', 'Waiting Times Distribution', waitingTimesAnalysis.chartData);
         renderChart('waitingTimesChart', waitingTimesChartOptions);
     } else {
         updateElementContent('waitingTimesChart', 'No valid waiting time data available');
     }
 
-    // Analyze registration times
-    const registrationTimesAnalysis = analyzeRegistrationTimes(lines);
-    const registrationTimesChartOptions = createPieChart('registrationTimesChart', 'Registration Time Distribution',
-        registrationTimesAnalysis.map(d => ({ label: `${d.hour}:00`, value: d.count })));
+    // Analyze registration times (modified to use 10-minute intervals)
+    const registrationTimesAnalysis = analyzeRegistrationTimes(lines)
+        .filter(d => d.interval >= 48 && d.interval < 96); // Filter for 08:00 to 16:00
+    const registrationTimesChartOptions = createPieChart('registrationTimesChart', 'Registration Time Distribution (08:00 - 16:00)',
+        registrationTimesAnalysis.map(d => ({
+            label: `${Math.floor(d.interval / 6)}:${(d.interval % 6) * 10 < 10 ? '0' : ''}${(d.interval % 6) * 10}`,
+            value: d.count
+        }))
+    );
     renderChart('registrationTimesChart', registrationTimesChartOptions);
 
-    // Predict peak hours
-    const peakHoursAnalysis = predictPeakHours(lines);
-    const peakHoursChartOptions = createBarChart('peakHoursChart', 'Predicted Peak Hours', peakHoursAnalysis);
-    renderChart('peakHoursChart', peakHoursChartOptions);
+    // Predict peak intervals (also modified to use 10-minute intervals)
+    const peakIntervalsAnalysis = predictPeakIntervals(lines)
+        .filter(d => d.interval >= 48 && d.interval < 96); // Filter for 08:00 to 16:00
+    const peakIntervalsChartOptions = createBarChart('peakIntervalsChart', 'Predicted Peak Intervals (08:00 - 16:00)',
+        peakIntervalsAnalysis.map(d => ({
+            hour: `${Math.floor(d.interval / 6)}:${(d.interval % 6) * 10 < 10 ? '0' : ''}${(d.interval % 6) * 10}`,
+            count: d.count,
+            isPeak: d.isPeak
+        }))
+    );
+    renderChart('peakIntervalsChart', peakIntervalsChartOptions);
 
-    // Optimize service time
+    // 서비스 최적화
     const serviceOptimization = optimizeServiceTime(lines, c);
+
+    // 서비스 최적화 결과 차트 생성
+    const serviceOptimizationChartOptions = createServiceOptimizationChart(serviceOptimization);
+    renderChart('serviceOptimizationChart', serviceOptimizationChartOptions);
 
     // Display service optimization results
     updateElementContent('serviceOptimization', `
@@ -88,8 +103,21 @@ async function initMMCK() {
         <p>Recommended Servers: ${serviceOptimization.recommendedServers}</p>
         <p>Estimated New Average Wait Time: ${serviceOptimization.estimatedNewAverageWaitTime.toFixed(2)} minutes</p>
     `);
-}
 
+    // 시계열 분석 차트 추가
+    const timeSeriesAnalysisData = lines.map(line => ({
+        x: new Date(line.Time).getTime(),
+        y: (new Date(line.WaitingFinishedTime) - new Date(line.Time)) / 60000 // 분 단위로 변환
+    })).sort((a, b) => a.x - b.x);
+
+    const timeSeriesAnalysisChartOptions = createTimeSeriesAnalysisChart(
+        'timeSeriesAnalysisChart',
+        'Waiting Time Trend',
+        timeSeriesAnalysisData
+    );
+    renderChart('timeSeriesAnalysisChart', timeSeriesAnalysisChartOptions);
+
+}
 
 function updateElementContent(elementId, content) {
     const element = document.getElementById(elementId);
@@ -128,5 +156,62 @@ function factorial(n) {
     if (n === 0 || n === 1) return 1;
     return n * factorial(n - 1);
 }
+
+function createServiceOptimizationChart(data) {
+    return {
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        series: [{
+            name: 'Current',
+            data: [data.currentAverageWaitTime, data.currentMaxWaitTime, data.currentServers]
+        }, {
+            name: 'Optimized',
+            data: [data.estimatedNewAverageWaitTime, data.currentMaxWaitTime, data.recommendedServers]
+        }],
+        xaxis: {
+            categories: ['Average Wait Time', 'Max Wait Time', 'Servers'],
+            title: {
+                text: 'Metrics'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Value'
+            }
+        },
+        title: {
+            text: 'Service Optimization Comparison',
+            align: 'center'
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        }
+    };
+}
+
 
 document.addEventListener('DOMContentLoaded', initMMCK);

@@ -5,15 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
     <link href="style/manage.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 </head>
 <body>
-    <h1>LINESONG MANAGER</h1><br>
-    <div id="mmckChartContainer"></div>
+    <br>
     <button id="mainpageBtn">MAIN</button>
-
-    <div id="quantityContainter">
-        대기인원: <span id="numberOfStudents"> </span> <br>
-        대기수량: <span id="remainingQuantity"></span>
+    <div class="horizonal">   
+        <h1>LINESONG<br>MANAGER</h1>
+        <div id="serverCalContainer" class="horizonal">          
+            <canvas id="serviceCompletionTimeChart"></canvas>
+        </div>
+        <table id="serverCalRes">
+            <thead>
+                <th>운영진 수 (c)</th>
+                <th>종료 시간 (분)</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="quantityContainer">    <br>
+            대기인원: <span id="numberOfStudents"> </span> <br>
+            대기수량: <span id="remainingQuantity"></span>
+        </div>
     </div>
     <!-- 팝업창 추가 -->
     <div id="analysisPopup" class="popup" style="display: none;">

@@ -17,7 +17,8 @@ export function analyzeWaitingTimes(lines) {
             medianWaitTime: 0,
             minWaitTime: 0,
             maxWaitTime: 0,
-            waitingTimeDistribution: []
+            waitingTimeDistribution: [],
+            chartData: []
         };
     }
 
@@ -29,8 +30,12 @@ export function analyzeWaitingTimes(lines) {
             console.log("Invalid time for line:", line);
             return null;
         }
-        return (endTime - startTime) / 60000; // Convert to minutes
-    }).filter(time => time !== null && !isNaN(time) && time >= 0);
+        return {
+            startTime,
+            endTime,
+            waitTime: (endTime - startTime) / 60000 // Convert to minutes
+        };
+    }).filter(time => time !== null && !isNaN(time.waitTime) && time.waitTime >= 0);
 
     console.log("Calculated waiting times:", waitingTimes);
 
@@ -41,52 +46,82 @@ export function analyzeWaitingTimes(lines) {
             medianWaitTime: 0,
             minWaitTime: 0,
             maxWaitTime: 0,
-            waitingTimeDistribution: []
+            waitingTimeDistribution: [],
+            chartData: []
         };
     }
 
-    const sortedWaitingTimes = waitingTimes.sort((a, b) => a - b);
-    const averageWaitTime = waitingTimes.reduce((sum, time) => sum + time, 0) / waitingTimes.length;
+    const sortedWaitingTimes = waitingTimes.sort((a, b) => a.waitTime - b.waitTime);
+    const waitTimeValues = sortedWaitingTimes.map(t => t.waitTime);
+    const averageWaitTime = waitTimeValues.reduce((sum, time) => sum + time, 0) / waitTimeValues.length;
 
     return {
         averageWaitTime,
-        medianWaitTime: sortedWaitingTimes[Math.floor(sortedWaitingTimes.length / 2)],
-        minWaitTime: sortedWaitingTimes[0],
-        maxWaitTime: sortedWaitingTimes[sortedWaitingTimes.length - 1],
-        waitingTimeDistribution: calculateDistribution(sortedWaitingTimes)
+        medianWaitTime: waitTimeValues[Math.floor(waitTimeValues.length / 2)],
+        minWaitTime: waitTimeValues[0],
+        maxWaitTime: waitTimeValues[waitTimeValues.length - 1],
+        waitingTimeDistribution: calculateDistribution(waitTimeValues),
+        chartData: sortedWaitingTimes.map(t => ({
+            x: t.startTime.toISOString(),
+            y: t.waitTime
+        }))
     };
 }
+
+// export function analyzeRegistrationTimes(lines) {
+//     console.log("Analyzing registration times for:", lines);
+//
+//     if (!Array.isArray(lines) || lines.length === 0) {
+//         console.warn('No valid lines data provided for registration time analysis');
+//         return Array(24).fill(0).map((_, hour) => ({ hour, count: 0 }));
+//     }
+//
+//     const hourCounts = new Array(24).fill(0);
+//
+//     lines.forEach(line => {
+//         if (line && typeof line === 'object') {
+//             const time = parseMySQLTimestamp(line.Time);
+//             if (time) {
+//                 const hour = time.getHours();
+//                 hourCounts[hour]++;
+//             }
+//         }
+//     });
+//
+//     return hourCounts.map((count, hour) => ({ hour, count }));
+// }
 
 export function analyzeRegistrationTimes(lines) {
     console.log("Analyzing registration times for:", lines);
 
     if (!Array.isArray(lines) || lines.length === 0) {
         console.warn('No valid lines data provided for registration time analysis');
-        return Array(24).fill(0).map((_, hour) => ({ hour, count: 0 }));
+        return Array(144).fill(0).map((_, index) => ({ interval: index, count: 0 }));
     }
 
-    const hourCounts = new Array(24).fill(0);
+    const intervalCounts = new Array(144).fill(0); // 24 hours * 6 intervals per hour
 
     lines.forEach(line => {
         if (line && typeof line === 'object') {
             const time = parseMySQLTimestamp(line.Time);
             if (time) {
-                const hour = time.getHours();
-                hourCounts[hour]++;
+                const minutes = time.getHours() * 60 + time.getMinutes();
+                const interval = Math.floor(minutes / 10);
+                intervalCounts[interval]++;
             }
         }
     });
 
-    return hourCounts.map((count, hour) => ({ hour, count }));
+    return intervalCounts.map((count, interval) => ({ interval, count }));
 }
 
-export function predictPeakHours(lines) {
-    const hourCounts = analyzeRegistrationTimes(lines);
-    const average = hourCounts.reduce((sum, { count }) => sum + count, 0) / 24;
+export function predictPeakIntervals(lines) {
+    const intervalCounts = analyzeRegistrationTimes(lines);
+    const average = intervalCounts.reduce((sum, { count }) => sum + count, 0) / 144;
     const threshold = average * 1.5; // Consider peak if 50% above average
 
-    return hourCounts.map(({ hour, count }) => ({
-        hour,
+    return intervalCounts.map(({ interval, count }) => ({
+        interval,
         count,
         isPeak: count > threshold
     }));

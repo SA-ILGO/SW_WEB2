@@ -1,56 +1,99 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1.0">
-        <title>LINESONG Waiting</title>
-        <link href="style/linesong.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body>
-        <br><div id="title">LINESONG WAITER</div><br>
-        <div class="horizonal">
-            <div class="container">            
-                <div class="vertical">
-                    <h1>WAITING TIME</h1>
-                    <div class="horizonal">
-                        <div class="vertical">
-                            <input type="text" class="input-container" id="ID" placeholder="  Input ID">
-                        </div>
-                        <button id="IDEnter">▶</button>
-                    </div>
-                    <div id="remainingQuantityContatiner">000</div>
-                    <h3>&nbsp;&nbsp;관리자가 승인해야 대기자 페이지를 사용할 수 있습니다.</h3>
-                </div>     
-            </div>
-            <div>
-                <canvas id="unity-canvas"></canvas>
-            </div>
-        </div>
-        <script>
-            var Module = {
-                // Unity 빌드를 초기화하기 위한 Canvas ID를 지정
-                'canvas': document.getElementById('unity-canvas'),
-                // 필요 시 Unity의 다른 설정 추가
-            };
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 종료 시간 시각화</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        canvas { max-width: 100%; height: auto; margin-bottom: 20px; }
+        input, button, select { margin: 10px 0; }
+        .horizontal { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+<div class="horizontal" id="container">
+    <div id="serverCalContainer">
+        <h3>운영진 수에 따른 서비스 종료 시간</h3>
+        <label for="serverNum">운영진 수:</label>
+        <input type="number" id="serverNum" min="1" max="5" value="1"/>
+        <button onclick="updateServerCompletionTime()">서비스 종료 시간 계산</button>
+        <canvas id="serviceCompletionTimeChart"></canvas>
+    </div>
+
+    <div id="quantityContainer">
+        <h3>대기 정보</h3>
+        대기 인원: <span id="numberOfStudents">100</span><br>
+        대기 수량: <span id="remainingQuantity">50</span>
+    </div>
+</div>
+
+<script>
+    const mu = 6; // 서비스 속도 (명/분)
     
-            // Unity WebGL 빌드 경로
-            var buildUrl = "Build/"; // 빌드 폴더 경로
-            var loaderUrl = buildUrl + "Build.loader.js"; // 실제 빌드 파일 이름으로 교체
-            var config = {
-                // Unity의 다른 구성 설정 추가
-            };
-    
-            // Unity 빌드 로드
-            createUnityInstance(Module.canvas, config, (progress) => {
-                // 로딩 진행 상태를 업데이트할 수 있습니다.
-                console.log(`Loading... ${progress * 100}%`);
-            }).then((unityInstance) => {
-                // Unity 인스턴스가 성공적으로 생성된 후의 처리
-                console.log('Unity instance is ready!');
-            }).catch((message) => {
-                // 로드 실패 시 처리
-                console.error(message);
-            });
-        </script>
-    </body>
+    // 서비스 종료 시간 계산 함수
+    function calculateServiceCompletionTime(n, c, mu) {
+        return Math.ceil(n / c) * (1 / mu);
+    }
+
+    // 차트 업데이트 함수
+    let serviceCompletionTimeChart;
+    function updateServerCompletionTime() {
+        const serverNum = parseInt(document.getElementById('serverNum').value);
+        const totalCustomers = parseInt(document.getElementById('numberOfStudents').textContent);
+        
+        const cValues = [1, 2, 3, 4, 5];
+        const completionTimes = cValues.map(c => calculateServiceCompletionTime(totalCustomers, c, mu) * 60); // 초 단위로 변환
+
+        // 기존 차트가 있으면 제거
+        if (serviceCompletionTimeChart) {
+            serviceCompletionTimeChart.destroy();
+        }
+
+        const ctx = document.getElementById('serviceCompletionTimeChart').getContext('2d');
+        serviceCompletionTimeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: cValues,
+                datasets: [{
+                    label: '서비스 종료 시간 (초)',
+                    data: completionTimes,
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '서비스 종료 시간 (초)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '서버 수 (c)'
+                        }
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '서버 수에 따른 서비스 종료 시간'
+                    }
+                }
+            }
+        });
+    }
+
+    // 초기 차트 생성
+    updateServerCompletionTime();
+</script>
+</body>
 </html>
