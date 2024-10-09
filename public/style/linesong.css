@@ -22,9 +22,11 @@ body {
 }
 
 h1 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 40px;
+    margin-left: 3%;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 1000;
 }
 
 h3 {
@@ -98,9 +100,22 @@ input::placeholder {
     color: rgb(160, 160, 160);
 }
 
+#TimeResContainer {
+    width: 33%;      
+    font-family: 'GongGothicMedium';
+    border-radius: 40px;
+    text-align: center;
+    padding: 18px;
+    height: 400px;
+    width: 1200px;
+    background-color: #ffffff;
+    margin-top: 2%;   
+    margin: auto;
+}
+
 #title {
     color: rgb(255, 255, 255);
-    font-size: 20px;
+    font-size: 30px;
     text-align: center;
     font-weight: 1000;
 }
